@@ -22,7 +22,6 @@ public class Main {
                 set.add(splited[i].charAt(0));
             }
         }
-
         System.out.print(set.size());
     }
 }
