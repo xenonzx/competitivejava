@@ -1,4 +1,4 @@
-//package com.company;
+package com.company;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,16 +13,27 @@ public class Main {
         //Scanner scanner = new Scanner(file);
         Scanner scanner = new Scanner(System.in);
         String in = scanner.nextLine();
-        String sub = in.substring(1,in.length()-1);
-        String[] splited = sub.split(", ");
+        Map <Character,Integer> map =  new TreeMap<Character,Integer>();
 
-        Set<Character> set = new HashSet<>();
-        for (int i = 0 ;i<splited.length;i++){
-            if (!splited[i].isEmpty()){
-                set.add(splited[i].charAt(0));
-            }
+        for (int i = 0; i < in.length() ; i++) {
+             if (in.charAt(i) != '+'){
+                 Integer charCount = map.get(in.charAt(i));
+
+                 map.put(in.charAt(i),charCount!=null? ++charCount:1);
+             }
         }
+        StringBuilder s = new StringBuilder();
+        for (Character c: map.keySet()) {
+            for (int i =0 ;i< map.get(c);i++){
 
-        System.out.print(set.size());
+                if(! s.toString().isEmpty()){
+                    s.append("+");
+                }
+                s.append(c);
+
+            }
+
+        }
+        System.out.print(s);
     }
 }
