@@ -37,39 +37,31 @@ public class Main {
         // setting mid at index
         out[midIndex] = s.charAt(0);
         i++;
+        int p1 ;
+        int p2 ;
+        int p;
+        for (int j = 1; j <length ;j++ ) {
 
-        for (int j = 1; j <length ; ) {
+            char c = s.charAt(j);
+
             if (length%2==1) {
-                char c = s.charAt(j);
-                int indexC = midIndex - i;
-                out[indexC] = c;
-                j++;
-
-                if (j==length){
-                    break;
-                }
-
-                char c2 = s.charAt(j);
-                int indexC2 = midIndex + i;
-                out[indexC2] = c2;
-                j++;
-
+                p1 = midIndex - i;
+                p2 = midIndex + i;
             } else {
-
-                char c = s.charAt(j);
-                int indexC = midIndex + i;
-                out[indexC] = c;
-                j++;
-
-                if (j==length){
-                    break;
-                }
-                char c2 = s.charAt(j);
-                int indexC2 = midIndex - i;
-                out[indexC2] = c2;
-                j++;
+                p1 = midIndex + i;
+                p2 = midIndex - i;
             }
-            i++;
+
+            if (j%2==1){
+                out[p1] = c;
+            } else {
+                out[p2] = c ;
+            }
+
+
+
+            if (j%2==0)
+                i++;
 
         }
         return new String(out);
