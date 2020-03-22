@@ -12,17 +12,34 @@ public class Main {
         //File file = new File("/Users/ahmed/Development/CompetitiveProgramming\ git java/src/com/company/in.txt");
         //Scanner scanner = new Scanner(file);
         Scanner scanner = new Scanner(System.in);
-        String in = scanner.nextLine();
-        String sub = in.substring(1,in.length()-1);
-        String[] splited = sub.split(", ");
+        int n = scanner.nextInt();
+        char[] colors = {'R', 'O', 'Y', 'G', 'B', 'I' , 'V' };
+        int[] indexes  = new int[n];
+        int numberOfColors = colors.length;
 
-        Set<Character> set = new HashSet<>();
-        for (int i = 0 ;i<splited.length;i++){
-            if (!splited[i].isEmpty()){
-                set.add(splited[i].charAt(0));
+        for (int i = 0; i < n ; i++) {
+            indexes[i] = i % numberOfColors;
+        }
+
+
+        int mod =n%7;
+
+        if (mod > 0 && mod < 4){
+            for (int i = 0; i < mod; i++) {
+                swap (indexes,n-i-1, n-i-1-3);
             }
         }
 
-        System.out.print(set.size());
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < n ; i++) {
+            sb.append(colors[indexes[i]]);
+        }
+        System.out.print(sb.toString());
+    }
+
+    static void swap(int[] a, int index1, int index2){
+        int tempVal = a[index1];
+        a[index1] = a[index2];
+        a[index2] = tempVal;
     }
 }
