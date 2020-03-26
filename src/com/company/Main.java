@@ -12,17 +12,18 @@ public class Main {
         //File file = new File("/Users/ahmed/Development/CompetitiveProgramming\ git java/src/com/company/in.txt");
         //Scanner scanner = new Scanner(file);
         Scanner scanner = new Scanner(System.in);
-        String in = scanner.nextLine();
-        String sub = in.substring(1,in.length()-1);
-        String[] splited = sub.split(", ");
+        int t = scanner.nextInt();
 
-        Set<Character> set = new HashSet<>();
-        for (int i = 0 ;i<splited.length;i++){
-            if (!splited[i].isEmpty()){
-                set.add(splited[i].charAt(0));
+        for (int i = 0 ;i<t;i++){
+            int a = scanner.nextInt();
+            int b = scanner.nextInt();
+            int result = 0;
+            if (a%b != 0){
+             result = b-(a%b);
             }
+            System.out.println(result);
         }
 
-        System.out.print(set.size());
+
     }
 }
