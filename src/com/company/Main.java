@@ -6,24 +6,16 @@
 import java.util.*;
 import java.io.*;
 
- class Main {
+public class Main {
 
     public static void main(String[] args) {
-//
-//        //File file = new File("/Users/ahmed/Development/CompetitiveProgramming\ git java/src/com/company/in.txt");
-//        //Scanner scanner = new Scanner(file);
-//        Scanner scanner = new Scanner(System.in);
-//        String in = scanner.nextLine();
-//        String sub = in.substring(1,in.length()-1);
-//        String[] splited = sub.split(", ");
-//
-//        Set<Character> set = new HashSet<>();
-//        for (int i = 0 ;i<splited.length;i++){
-//            if (!splited[i].isEmpty()){
-//                set.add(splited[i].charAt(0));
-//            }
-//        }
 
-        System.out.print("helloworld");
+        Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
+        String s= in.next();
+        StringBuilder sb = new StringBuilder();
+        for (int i = s.length()-1; i>=0 ;i--){
+            sb.append(s.charAt(i));
+        }
+        System.out.print(s+sb);
     }
 }
