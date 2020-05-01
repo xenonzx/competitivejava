@@ -14,14 +14,15 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
-        HashMap<Character,Double> map = new HashMap<>();
         Set<Character> characterSet =  new HashSet<>();
         ArrayList<Pair<Integer,Integer>> shifts = new ArrayList<>();
+        Set<Character> oneHandChars = new HashSet<Character>();
 
         int n = in.nextInt();
         int m = in.nextInt();
-        double x = in.nextDouble();
+        int x = in.nextInt();
         //n rows m cols
+        Character[][] charMatrix =  new Character[n][m];
 
         // fill array
         HashMap<Character,ArrayList<Pair<Integer,Integer>>>keyboardMap = new HashMap<>();
@@ -29,10 +30,7 @@ public class Main {
             String row = in.next();
             for (int j = 0; j < m; j++) {
                 Character c = row.charAt(j);
-
-                ArrayList listOfPairs = keyboardMap.getOrDefault(c,new ArrayList());
-                listOfPairs.add(new Pair(i,j));
-                keyboardMap.put(c, listOfPairs);
+                charMatrix[i][j] = c ;
                 if (c =='S'){
                   shifts.add(new Pair<>(i,j));
                 } else {
@@ -55,25 +53,36 @@ public class Main {
             System.out.println("-1");
             return;
         }
+        for (Pair<Integer, Integer> shiftPos: shifts) {
+            // find all points in range of the circle
+            // to avoid  invalid index
+            int areaStartX = Math.max(0, shiftPos.getKey() - x) ;
+            int areaStartY = Math.max(0, shiftPos.getValue() - x) ;
 
-        // can have duplication
-        ArrayList<Character> upperCaseChars = new ArrayList<>();
-        for (int i = 0; i <query.length() ; i++) {
-            if (Character.isUpperCase(query.charAt(i))){
-                upperCaseChars.add(Character.toLowerCase(query.charAt(i)));
+            int areaEndX = Math.min(n-1,shiftPos.getKey() + x) ;
+            int areaEndY = Math.min(m-1, shiftPos.getValue() + x);
+
+            for (int i = areaStartX; i <= areaEndX; i++) {
+                for (int j = areaStartY; j <= areaEndY  ; j++) {
+                    if(i==shiftPos.getKey() && j == shiftPos.getValue())
+                        continue;
+                    if (calculateDistanceBetweenPoints(i,j,shiftPos.getKey(),shiftPos.getValue()) <= ((double)x))
+                        oneHandChars.add(charMatrix[i][j]);
+
+                }
             }
         }
-        int count2hands = 0;
-        for (Character upChar :upperCaseChars) {
-            double shortest=Double.MAX_VALUE;
 
-            for (Pair<Integer,Integer> point: keyboardMap.get(upChar) ) {
-                shortest = Math.min(shortest, shortestEclidianDistance(point, shifts));
-            }
-            if (shortest>x){
+        // can have duplication
+        int count2hands = 0;
+        for (int i = 0; i <query.length() ; i++) {
+            Character queryChar = query.charAt(i);
+            if (Character.isUpperCase(queryChar) && !oneHandChars.contains(Character.toLowerCase(queryChar))){
                 count2hands++;
             }
         }
+
+
         System.out.println(count2hands);
     }
     private static double shortestEclidianDistance(Pair<Integer,Integer> point, ArrayList<Pair<Integer,Integer>> shifts){
