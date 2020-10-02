@@ -15,78 +15,50 @@ import java.io.*;
 //        Scanner scanner = new Scanner(System.in);
 //        String in = scanner.nextLine();
         Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
+        String str1 = in.next();
+        String str2 = in.next();
 
+        int removableChars=  deletionDistance(str1,str2)
+        System.out.println(removableChars);
+    }
+     static int deletionDistance(String str1, String str2) {
+         // your code goes here
+         int lcs = lcs(str1,str2);
+         return str1.length()-lcs + str2.length()-lcs;
+     }
 
-        int t = in.nextInt();
-        for (int i = 1; i <=t ; i++) {
-            // slice size and its count
-            TreeMap<Long,Integer> slicesCounters = new TreeMap<>();
-            int n = in.nextInt();
-            int d = in.nextInt();
-            int chops = 0;
-            for (int j = 0; j < n; j++) {
-                Long sliceSize = in.nextLong();
-                int sliceCount  = slicesCounters.getOrDefault(sliceSize,0);
-                sliceCount++;
-                slicesCounters.put(sliceSize,sliceCount);
-            }
-            Map.Entry<Long, Integer> maxEntry = getlargestNumberOfSlicesEntry(slicesCounters);
-            while (maxEntry.getValue()<d){
-            chops++;
+    static int lcs(String s1, String s2){
+        int lcs = 0;
+        int sizeRows = s1.length()+1;
+        int sizeCols = s2.length()+1;
+        int[][] arr = new int[sizeRows][sizeCols];
 
-
-
-                //cut to increase the max
-
-                //now we know which y
-                long y;
-                Iterator<Long> iterator = slicesCounters.descendingKeySet().descendingIterator();
-                Long sizeWithMaxCount = iterator.next();
-                if ( sizeWithMaxCount == maxEntry.getKey()){
-                    y = iterator.next();
-                } else {
-                    y = sizeWithMaxCount;
-                }
-                // cut the one that can give you 2 eqaul slices or the largest one
-                int entryToChoppedCounter = 0;
-                long entryToChoppedKey = 0;
-//                Map.Entry<Long, Integer> entryTobeChopped = null;
-//                for (Map.Entry<Long, Integer> entry : slicesCounters.entrySet())
-//                {
-//                    if ( entry.getValue()/2 == y) {
-//                        entryToChoppedKey = entry.getKey();
-//                        entryToChoppedCounter = entry.getValue();
-//                    }
-//                }
-                // chop
-                long slice1 = y;
-                long slice2 = sizeWithMaxCount - y;
-                int s1counter = slicesCounters.get(slice1)-1;
-                slicesCounters.put(slice1,slicesCounters.getOrDefault(slice1,0)+1);
-                slicesCounters.put(slice2,slicesCounters.getOrDefault(slice2,0)+1);
-                slicesCounters.put(sizeWithMaxCount,slicesCounters.getOrDefault(sizeWithMaxCount,0)-1);
-
-//                if(entryTobeChopped == null){
-//                    entryToChoppedKey = y;
-//                    entryToChoppedCounter = slicesCounters.get(y);
-//                }
-
-            }
-        System.out.println("Case #" + i+ ": " + chops);
+        // zeroing the fist col of
+        for (int i = 0; i <sizeRows; i++) {
+            arr[i][0] = 0 ;
         }
 
+        // zeroing the firs row
+        for (int i = 0; i <sizeCols; i++) {
+            arr[0][i] = 0 ;
+        }
 
+        for (int row = 1;row < sizeRows; row++) {
+            for (int col = 1; col < sizeCols; col++) {
+                int s1Index = row-1;
+                int s2Index = col-1;
+
+                if (s1.charAt(s1Index) == s2.charAt(s2Index)){
+                    arr[row][col] = arr[row-1][col-1] + 1 ;
+                }else {
+                    arr[row][col] = Math.max( arr[row-1][col],arr[row][col-1]);
+                }
+
+                if (row==sizeRows-1 && col == sizeCols -1){
+                    lcs= arr[row][col];
+                }
+            }
+        }
+        return lcs;
     }
-
-     private static Map.Entry<Long, Integer> getlargestNumberOfSlicesEntry(TreeMap<Long, Integer> slicesCounters) {
-         Map.Entry<Long, Integer> maxEntry = null;
-         for (Map.Entry<Long, Integer> entry : slicesCounters.entrySet())
-         {
-             if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
-             {
-                 maxEntry = entry;
-             }
-         }
-         return maxEntry;
-     }
  }
