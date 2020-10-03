@@ -9,77 +9,120 @@ public class Solution {
 //        String in = scanner.nextLine();
         Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
 
+        int[] c = new  int[] { 0, 0, 1 ,0 ,0, 1, 0};
+        //jumpingOnClouds(c);
+        maxSubArray(new int[]{-2, -1});
+    }
+    static long sq(long number ){
+        long n = number * number ;
+        return n;
+    }
 
-        int t = in.nextInt();
-        for (int i = 1; i <=t ; i++) {
-            // slice size and its count
-            TreeMap<Long,Integer> slicesCounters = new TreeMap<>();
-            int n = in.nextInt();
-            int d = in.nextInt();
-            int chops = 0;
-            for (int j = 0; j < n; j++) {
-                Long sliceSize = in.nextLong();
-                int sliceCount  = slicesCounters.getOrDefault(sliceSize,0);
-                sliceCount++;
-                slicesCounters.put(sliceSize,sliceCount);
+    public static int countingValleys(int steps, String path) {
+        // Write your code here
+        int diff = 0;
+        int vallies = 0;
+        int prevDiff = 0 ;
+        for(int i = 0 ; i<steps ; i++){
+            if (path.charAt(i)=='U'){
+                diff ++;
+            } else {
+                diff --;
             }
-            Map.Entry<Long, Integer> maxEntry = getlargestNumberOfSlicesEntry(slicesCounters);
-            while (maxEntry.getValue()<d){
-                chops++;
-
-
-
-                //cut to increase the max
-
-                //now we know which y
-                long y;
-                Iterator<Long> iterator = slicesCounters.descendingKeySet().descendingIterator();
-                Long sizeWithMaxCount = iterator.next();
-                if ( sizeWithMaxCount == maxEntry.getKey()){
-                    y = iterator.next();
-                } else {
-                    y = sizeWithMaxCount;
-                }
-                // cut the one that can give you 2 eqaul slices or the largest one
-                int entryToChoppedCounter = 0;
-                long entryToChoppedKey = 0;
-//                Map.Entry<Long, Integer> entryTobeChopped = null;
-//                for (Map.Entry<Long, Integer> entry : slicesCounters.entrySet())
-//                {
-//                    if ( entry.getValue()/2 == y) {
-//                        entryToChoppedKey = entry.getKey();
-//                        entryToChoppedCounter = entry.getValue();
-//                    }
-//                }
-                // chop
-                long slice1 = y;
-                long slice2 = sizeWithMaxCount - y;
-                int s1counter = slicesCounters.get(slice1)-1;
-                slicesCounters.put(slice1,slicesCounters.getOrDefault(slice1,0)+1);
-                slicesCounters.put(slice2,slicesCounters.getOrDefault(slice2,0)+1);
-                slicesCounters.put(sizeWithMaxCount,slicesCounters.getOrDefault(sizeWithMaxCount,0)-1);
-
-//                if(entryTobeChopped == null){
-//                    entryToChoppedKey = y;
-//                    entryToChoppedCounter = slicesCounters.get(y);
-//                }
-
+            if (prevDiff ==0&& diff <0){
+                vallies ++;
             }
-            System.out.println("Case #" + i+ ": " + chops);
+            prevDiff =diff;
+        }
+        return vallies;
+    }
+
+    static int jumpingOnClouds(int[] c) {
+        int size = c.length;
+        int i = 0;
+        int jumps = 0;
+        while ( i <size ) {
+            if (i== size - 1)
+                break;
+            if (i+2<size && c[i+2] == 0){
+                i+=2;
+                jumps++;
+                continue;
+            }else if (i+1<size && c[i+1] == 0){
+                i++;
+                jumps++;
+            }
+
+
+
+        }
+    return jumps;
+    }
+
+    static long repeatedString(String s, long n) {
+        int sLength = s.length();
+        // number of as is string
+        int nAinS  = 0;
+        for (int i = 0; i < sLength; i++) {
+            if( s.charAt(i)=='a')
+                nAinS++;
         }
 
+
+        long countA = ((n/sLength)*nAinS);
+
+        // the remaining
+        int rem = (int) (n%sLength);
+        for (int i = 0; i <rem ; i++) {
+            if(s.charAt(i)=='a'){
+                countA++;
+            }
+        }
+        return countA;
 
     }
 
-    private static Map.Entry<Long, Integer> getlargestNumberOfSlicesEntry(TreeMap<Long, Integer> slicesCounters) {
-        Map.Entry<Long, Integer> maxEntry = null;
-        for (Map.Entry<Long, Integer> entry : slicesCounters.entrySet())
-        {
-            if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
-            {
-                maxEntry = entry;
+    //https://leetcode.com/problems/maximum-subarray/
+    public int maxSubArray2(int[] nums) {
+
+        int[][] indecesSum = new int [nums.length][nums.length];
+        indecesSum[0][0] = nums[0];
+        int maxVal = indecesSum[0][0];
+        for (int j = 1; j < nums.length; j++) {
+            indecesSum[0][j] = nums[j] + indecesSum[0][j-1];
+            maxVal = Integer.max(indecesSum[0][j],maxVal);
+        }
+
+        for (int i = 1; i <nums.length ; i++) {
+            for (int j = i; j <nums.length ; j++) {
+                if (i==j){
+                    indecesSum[i][j] = nums[i];
+                }
+                indecesSum[i][j] = indecesSum[i][j-1]+ indecesSum[i-1][j] - indecesSum[i-1][j-1];
+                maxVal = Integer.max(indecesSum[i][j],maxVal);
             }
         }
-        return maxEntry;
+        return  maxVal;
+    }
+    //https://leetcode.com/problems/maximum-subarray/
+
+    static  int maxSubArray(int[] nums){
+        int [] prifix = new int [nums.length];
+        prifix[0]= nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            prifix[i] =  prifix[i-1]+nums[i];
+        }
+
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i <nums.length ; i++) {
+            for (int j = i; j < nums.length ; j++) {
+               max = Math.max(max,sumRange(prifix,i,j));
+            }
+        }
+        return max;
+    }
+    static int sumRange(int[] num, int[] pri, int start,int end){
+       return pri[end]-pri[start]+num[start]
+
     }
 }
